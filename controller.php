@@ -175,9 +175,12 @@ class Controller extends Package
         // The actual objects
         $recipeCategory = Express::buildObject('recipe_category', 'recipe_categories', 'Recipe Category', $pkg);
         $recipe         = Express::buildObject('recipe', 'recipes', 'Recipe', $pkg);
-//        $recipeCategory = $recipeCategory->getEntity();
         // Attributes for each
+
+        // name
         $recipeCategory->addAttribute('text', 'Name', 'recipe_category_name');
+        // image
+        $recipeCategory->addAttribute('image_file', "Category Header Image", "recipe_category_image");
         $recipeCategory->save();
 
         // title
@@ -206,6 +209,9 @@ class Controller extends Package
         // feeds
         $recipe->addAttribute('text', 'Feeds', 'recipe_feeds');
 
+        // image
+        $recipe->addAttribute('image_file', "Image", "recipe_image");
+
         // ingredients
         $ingredientsSettings = new \Concrete\Core\Entity\Attribute\Key\Settings\SelectSettings();
         $ingredientsSettings->setAllowMultipleValues((string) true);
@@ -221,8 +227,10 @@ class Controller extends Package
 
         // Edit Forms
         $catForm = $recipeCategory->buildForm("Form");
-        $catForm->addFieldset("Basics")
-            ->addAttributeKeyControl("recipe_category_name");
+        $catFieldset = $catForm->addFieldset("Basics");
+        $catFieldset->addAttributeKeyControl("recipe_category_name");
+        $catFieldset->addAttributeKeyControl("recipe_category_image");
+        $catFieldset->addTextControl("", "Will be cropped to 376x192. Use a HDPI image for best results.");
         $catForm = $catForm->save();
         $recipeCategory->getEntity()->setDefaultViewForm($catForm);
         $recipeCategory->getEntity()->setDefaultEditForm($catForm);
@@ -230,14 +238,17 @@ class Controller extends Package
         $recipeForm     = $recipe->buildForm("Form");
         $recipeFieldset = $recipeForm->addFieldset("Basics");
         $recipeFieldset->addAttributeKeyControl("recipe_name");
-        $recipeFieldset->addTextControl("", "Include units like minutes or hours, but do not abbreviate");
         $recipeFieldset->addAttributeKeyControl("recipe_prep_time");
+        $recipeFieldset->addTextControl("", "Include units like minutes or hours, but do not abbreviate");
         $recipeFieldset->addAttributeKeyControl("recipe_difficulty");
-        $recipeFieldset->addTextControl("", "The number of people this dish feeds, either as a single number (6) or a range (6-7)");
         $recipeFieldset->addAttributeKeyControl("recipe_feeds");
-        $recipeFieldset->addTextControl("", "Ingredients are displayed in order, and should include units, IE '2tbs melted butter'");
+        $recipeFieldset->addTextControl("", "The number of people this dish feeds, either as a single number (6) or a range (6-7)");
+        $recipeFieldset->addAttributeKeyControl("recipe_image");
+        $recipeFieldset->addTextControl("", "This image will be cropped to 344x192 in the header, 344x128 in card view. Use a high res picture for desktop and retina devices.");
         $recipeFieldset->addAttributeKeyControl("recipe_ingredients");
+        $recipeFieldset->addTextControl("", "Ingredients are displayed in order, and should include units, IE '2tbs melted butter'");
         $recipeFieldset->addAttributeKeyControl("recipe_instructions");
+        $recipeFieldset->addTextControl("", "Try to avoid lots of formatting or pictures, a simple numbered list is usually best.");
         $recipeForm     = $recipeForm->save();
         $recipe->getEntity()->setDefaultViewForm($recipeForm);
         $recipe->getEntity()->setDefaultEditForm($recipeForm);
