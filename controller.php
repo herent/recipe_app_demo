@@ -9,6 +9,8 @@ use Illuminate\Filesystem\Filesystem;
 use Express;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList;
+//use Concrete\Core\Routing\Route;
+use Route;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -30,7 +32,17 @@ class Controller extends Package
     protected $appVersionRequired = '8.2.0';
     protected $pkgAllowsFullContentSwap = false;
     protected $pkgContentProvidesFileThumbnails = false;
-
+    /**
+     * Should we remove 'Src' from classes that are contained
+     * ithin the packages 'src/Concrete' directory automatically?
+     *
+     * '\Concrete\Package\MyPackage\Src\MyNamespace' becomes '\Concrete\Package\MyPackage\MyNamespace'
+     *
+     * @see https://goo.gl/4wyRtH
+     * @var bool
+     */
+    protected $pkgAutoloaderMapCoreExtensions = true;
+    
     /**
      * Package class autoloader registrations
      * The package install helper class, included with this boilerplate, 
@@ -40,7 +52,7 @@ class Controller extends Package
      * @var array
      */
     protected $pkgAutoloaderRegistries = [
-        //'src/MyVendor/Statistics' => '\MyVendor\ConcreteStatistics'
+        'RecipeAppDemo' => '\RecipeAppDemo'
     ];
 
     /**
@@ -83,6 +95,26 @@ class Controller extends Package
         // Add custom logic here that needs to be executed during CMS boot, things
         // such as registering services, assets, etc.
         //require $this->getPackagePath().'/vendor/autoload.php';
+        Route::register(
+            'ajax/recipes/categories',
+            '\RecipeAppDemo\Category::listAll'
+            );
+        Route::register(
+            'ajax/recipes/categories/{categoryID}',
+            '\RecipeAppDemo\Category::listAll'
+            );
+        Route::register(
+            'ajax/recipes/categories/{categoryID}/recipe-list',
+            '\RecipeAppDemo\Category::getCategoryRecipes'
+            );
+        Route::register(
+            'ajax/recipes/featured',
+            '\RecipeAppDemo\Category::getFeatured'
+            );
+        Route::register(
+            'ajax/recipes/featured/{categoryID}',
+            '\RecipeAppDemo\Category::getFeatured'
+            );
     }
 
     /**
