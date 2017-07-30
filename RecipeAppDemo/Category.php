@@ -14,18 +14,18 @@ class Category extends Controller
 
     public function listAll($categoryID = false)
     {
-        $jsonh      = Core::make("helper/json");
-        $res           = array();
+        $jsonh = Core::make("helper/json");
+        $res   = array();
         if ($categoryID) {
             // we just want one category
             $category = Express::getEntry($categoryID);
             if ($category) {
-                $thisCategory = array();
+                $thisCategory                = array();
                 $thisCategory["id"]          = $category->getID();
                 $thisCategory["name"]        = $category->getRecipeCategoryName();
                 $thisCategory["headerImage"] = $this->getImageURL($category->getRecipeCategoryImage());
                 $thisCategory["recipeCount"] = count($category->getRecipeCategories());
-                $res[] = $thisCategory;
+                $res[]                       = $thisCategory;
             }
         } else {
             // list them all
@@ -33,12 +33,12 @@ class Category extends Controller
             $list       = new \Concrete\Core\Express\EntryList($entity);
             $categories = $list->getResults();
             foreach ($categories as $category) {
-                $thisCategory = array();
+                $thisCategory                = array();
                 $thisCategory["id"]          = $category->getID();
                 $thisCategory["name"]        = $category->getRecipeCategoryName();
                 $thisCategory["headerImage"] = $this->getImageURL($category->getRecipeCategoryImage());
                 $thisCategory["recipeCount"] = count($category->getRecipeCategories());
-                $res[] = $thisCategory;
+                $res[]                       = $thisCategory;
             }
         }
         echo $jsonh->encode($res);
@@ -47,12 +47,12 @@ class Category extends Controller
 
     public function getCategoryRecipes($categoryID = false)
     {
-        $jsonh         = Core::make("helper/json");
-        $res           = array();
+        $jsonh = Core::make("helper/json");
+        $res   = array();
         if ($categoryID) {
             $category = Express::getEntry($categoryID);
             if ($category) {
-                $recipes       = $category->getRecipeCategories();
+                $recipes = $category->getCategoryRecipes();
                 foreach ($recipes as $recipe) {
                     $thisRecipe               = array();
                     $thisRecipe["id"]         = $recipe->getID();
@@ -61,7 +61,7 @@ class Category extends Controller
                     $difficulty               = (string) $recipe->getRecipeDifficulty();
                     $thisRecipe["difficulty"] = $difficulty;
                     $thisRecipe["image"]      = $this->getImageURL($recipe->getRecipeImage());
-                    $res[]          = $thisRecipe;
+                    $res[]                    = $thisRecipe;
                 }
             }
         }
@@ -77,15 +77,17 @@ class Category extends Controller
             // just the featured for this one
             $category = Express::getEntry($categoryID);
             if ($category) {
-                $recipe                   = $category->getFeaturedRecipe();
-                $thisRecipe               = array();
-                $thisRecipe["id"]         = $recipe->getID();
-                $thisRecipe["name"]       = $recipe->getRecipeName();
-                $thisRecipe["prepTime"]   = $recipe->getRecipePrepTime();
-                $difficulty               = (string) $recipe->getRecipeDifficulty();
-                $thisRecipe["difficulty"] = $difficulty;
-                $thisRecipe["image"]      = $this->getImageURL($recipe->getRecipeImage());
-                $res[]                    = $thisRecipe;
+                $recipe = $category->getFeaturedRecipe();
+                if ($recipe) {
+                    $thisRecipe               = array();
+                    $thisRecipe["id"]         = $recipe->getID();
+                    $thisRecipe["name"]       = $recipe->getRecipeName();
+                    $thisRecipe["prepTime"]   = $recipe->getRecipePrepTime();
+                    $difficulty               = (string) $recipe->getRecipeDifficulty();
+                    $thisRecipe["difficulty"] = $difficulty;
+                    $thisRecipe["image"]      = $this->getImageURL($recipe->getRecipeImage());
+                    $res[]                    = $thisRecipe;
+                }
             }
         } else {
             // get all the recipes, find the featured for each one
@@ -94,24 +96,27 @@ class Category extends Controller
             $categories = $list->getResults();
 
             foreach ($categories as $category) {
-                $recipe                   = $category->getFeaturedRecipe();
-                $thisRecipe               = array();
-                $thisRecipe["id"]         = $recipe->getID();
-                $thisRecipe["name"]       = $recipe->getRecipeName();
-                $thisRecipe["prepTime"]   = $recipe->getRecipePrepTime();
-                $difficulty               = (string) $recipe->getRecipeDifficulty();
-                $thisRecipe["difficulty"] = $difficulty;
-                $thisRecipe["image"]      = $this->getImageURL($recipe->getRecipeImage());
-                $res[]                    = $thisRecipe;
+                $recipe = $category->getFeaturedRecipe();
+                if ($recipe) {
+                    $thisRecipe               = array();
+                    $thisRecipe["id"]         = $recipe->getID();
+                    $thisRecipe["name"]       = $recipe->getRecipeName();
+                    $thisRecipe["prepTime"]   = $recipe->getRecipePrepTime();
+                    $difficulty               = (string) $recipe->getRecipeDifficulty();
+                    $thisRecipe["difficulty"] = $difficulty;
+                    $thisRecipe["image"]      = $this->getImageURL($recipe->getRecipeImage());
+                    $res[]                    = $thisRecipe;
+                }
             }
         }
         echo $jsonh->encode($res);
         die();
     }
 
-    private function getImageURL($image = false){
-        if ($image){
-            $fv = $image->getApprovedVersion();
+    private function getImageURL($image = false)
+    {
+        if ($image) {
+            $fv  = $image->getApprovedVersion();
             $url = $fv->getURL();
         }
         return $url;
