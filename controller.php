@@ -1,11 +1,4 @@
 <?php
-/**
- * Recipe App Demo Controller File.
- *
- * @author   Jeremy Werst <jeremy.werst@gmail.com>
- * @license  See attached license file
- */
-
 namespace Concrete\Package\RecipeAppDemo;
 
 use Core;
@@ -34,36 +27,9 @@ class Controller extends Package
      * 
      * @var string
      */
-    protected $appVersionRequired = '8.2.0RC2';
-
-    /**
-     * Does the package provide a full content swap?
-     * This feature is often used in theme packages to install 'sample' content on the site.
-     *
-     * @see https://goo.gl/C4m6BG
-     * @var bool
-     */
+    protected $appVersionRequired = '8.2.0';
     protected $pkgAllowsFullContentSwap = false;
-
-    /**
-     * Does the package provide thumbnails of the files 
-     * imported via the full content swap above?
-     *
-     * @see https://goo.gl/C4m6BG
-     * @var bool
-     */
     protected $pkgContentProvidesFileThumbnails = false;
-
-    /**
-     * Should we remove 'Src' from classes that are contained 
-     * ithin the packages 'src/Concrete' directory automatically?
-     *
-     * '\Concrete\Package\MyPackage\Src\MyNamespace' becomes '\Concrete\Package\MyPackage\MyNamespace'
-     *
-     * @see https://goo.gl/4wyRtH
-     * @var bool
-     */
-    protected $pkgAutoloaderMapCoreExtensions = false;
 
     /**
      * Package class autoloader registrations
@@ -116,7 +82,7 @@ class Controller extends Package
     {
         // Add custom logic here that needs to be executed during CMS boot, things
         // such as registering services, assets, etc.
-        require $this->getPackagePath().'/vendor/autoload.php';
+        //require $this->getPackagePath().'/vendor/autoload.php';
     }
 
     /**
@@ -213,11 +179,16 @@ class Controller extends Package
         $recipe->addAttribute('image_file', "Image", "recipe_image");
 
         // ingredients
-        $ingredientsSettings = new \Concrete\Core\Entity\Attribute\Key\Settings\SelectSettings();
-        $ingredientsSettings->setAllowMultipleValues((string) true);
-        $ingredientsSettings->setDisplayOrder("display_asc");
-        $ingredientsSettings->setAllowOtherValues((string) true);
-        $recipe->addAttribute('select', 'Ingredients', 'recipe_ingredients', $ingredientsSettings);
+//        $ingredientsSettings = new \Concrete\Core\Entity\Attribute\Key\Settings\SelectSettings();
+//        $ingredientsSettings->setAllowMultipleValues((string) true);
+//        $ingredientsSettings->setDisplayOrder("display_asc");
+//        $ingredientsSettings->setAllowOtherValues((string) true);
+//        $recipe->addAttribute('select', 'Ingredients', 'recipe_ingredients', $ingredientsSettings);
+
+        // ingredients
+        $ingredientSettings = new \Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings();
+        $ingredientSettings->setMode((string) "rich_text");
+        $recipe->addAttribute('textarea', 'Ingredients', 'recipe_ingredients', $ingredientSettings);
 
         // instructions
         $instructionsSettings = new \Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings();
@@ -225,38 +196,43 @@ class Controller extends Package
         $recipe->addAttribute('textarea', 'Instructions', 'recipe_instructions', $instructionsSettings);
         $recipe->save();
 
+        // Associations
+        $builder = $recipeCategory->buildAssociation();
+        $builder->addManyToMany($recipe, "recipe_categories");
+        $builder->addOneToOne($recipe, "featured_recipe");
+        $builder->save();
+
         // Edit Forms
-        $catForm = $recipeCategory->buildForm("Form");
+        $catForm = $recipeCategory->buildForm("Dashboard Recipe Category Form");
         $catFieldset = $catForm->addFieldset("Basics");
         $catFieldset->addAttributeKeyControl("recipe_category_name");
         $catFieldset->addAttributeKeyControl("recipe_category_image");
-        $catFieldset->addTextControl("", "Will be cropped to 376x192. Use a HDPI image for best results.");
+//        $catFieldset->addTextControl("", "Will be cropped to 376x192. Use a HDPI image for best results.");
+        $catFieldset->addAssociationControl("featured_recipe");
         $catForm = $catForm->save();
         $recipeCategory->getEntity()->setDefaultViewForm($catForm);
         $recipeCategory->getEntity()->setDefaultEditForm($catForm);
+        $recipeCategory->save();
 
-        $recipeForm     = $recipe->buildForm("Form");
+        $recipeForm     = $recipe->buildForm("Dashboard Recipe Form");
         $recipeFieldset = $recipeForm->addFieldset("Basics");
         $recipeFieldset->addAttributeKeyControl("recipe_name");
         $recipeFieldset->addAttributeKeyControl("recipe_prep_time");
-        $recipeFieldset->addTextControl("", "Include units like minutes or hours, but do not abbreviate");
+//        $recipeFieldset->addTextControl("", "Include units like minutes or hours, but do not abbreviate");
         $recipeFieldset->addAttributeKeyControl("recipe_difficulty");
         $recipeFieldset->addAttributeKeyControl("recipe_feeds");
-        $recipeFieldset->addTextControl("", "The number of people this dish feeds, either as a single number (6) or a range (6-7)");
+//        $recipeFieldset->addTextControl("", "The number of people this dish feeds, either as a single number (6) or a range (6-7)");
         $recipeFieldset->addAttributeKeyControl("recipe_image");
-        $recipeFieldset->addTextControl("", "This image will be cropped to 344x192 in the header, 344x128 in card view. Use a high res picture for desktop and retina devices.");
+//        $recipeFieldset->addTextControl("", "This image will be cropped to 344x192 in the header, 344x128 in card view. Use a high res picture for desktop and retina devices.");
         $recipeFieldset->addAttributeKeyControl("recipe_ingredients");
-        $recipeFieldset->addTextControl("", "Ingredients are displayed in order, and should include units, IE '2tbs melted butter'");
+//        $recipeFieldset->addTextControl("", "Ingredients are displayed in order, and should include units, IE '2tbs melted butter'");
         $recipeFieldset->addAttributeKeyControl("recipe_instructions");
-        $recipeFieldset->addTextControl("", "Try to avoid lots of formatting or pictures, a simple numbered list is usually best.");
+//        $recipeFieldset->addTextControl("", "Try to avoid lots of formatting or pictures, a simple numbered list is usually best.");
+        $recipeFieldset->addAssociationControl("recipe_categories");
         $recipeForm     = $recipeForm->save();
         $recipe->getEntity()->setDefaultViewForm($recipeForm);
         $recipe->getEntity()->setDefaultEditForm($recipeForm);
-
-        // Associations
-        $builder = $recipeCategory->buildAssociation();
-        $builder->addManyToMany($recipe);
-        $builder->addOneToOne($recipe, "featured_recipe");
-        $builder->save();
+        $recipe->save();
+        
     }
 }
