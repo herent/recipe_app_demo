@@ -115,6 +115,14 @@ class Controller extends Package
             'ajax/recipes/featured/{categoryID}',
             '\RecipeAppDemo\Category::getFeatured'
             );
+        Route::register(
+            'ajax/recipes/list',
+            '\RecipeAppDemo\Recipe::listAll'
+            );
+        Route::register(
+            'ajax/recipes/detail/{recipeID}',
+            '\RecipeAppDemo\Recipe::listAll'
+            );
     }
 
     /**
