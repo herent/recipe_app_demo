@@ -2,8 +2,6 @@
 
 namespace RecipeAppDemo;
 
-defined('C5_EXECUTE') or die(_('Access Denied.'));
-
 use Controller;
 use Core;
 use Express;

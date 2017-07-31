@@ -13,8 +13,6 @@ use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Routing\RouterInterface;
 
-defined('C5_EXECUTE') or die('Access Denied.');
-
 /**
  * Package Controller Class.
  *
