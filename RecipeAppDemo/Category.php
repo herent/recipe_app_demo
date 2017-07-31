@@ -6,6 +6,7 @@ use Controller;
 use Core;
 use Express;
 use Concrete\Core\Express\EntryList;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Category extends Controller
 {
@@ -39,13 +40,11 @@ class Category extends Controller
                 $res[]                       = $thisCategory;
             }
         }
-        echo $jsonh->encode($res);
-        die();
+        return new JsonResponse($res);
     }
 
     public function getCategoryRecipes($categoryID = false)
     {
-        $jsonh = Core::make("helper/json");
         $res   = array();
         if ($categoryID) {
             $category = Express::getEntry($categoryID);
@@ -63,13 +62,11 @@ class Category extends Controller
                 }
             }
         }
-        echo $jsonh->encode($res);
-        die();
+        return new JsonResponse($res);
     }
 
     public function getFeatured($categoryID = false)
     {
-        $jsonh = Core::make("helper/json");
         $res   = array();
         if ($categoryID) {
             // just the featured for this one
@@ -107,8 +104,7 @@ class Category extends Controller
                 }
             }
         }
-        echo $jsonh->encode($res);
-        die();
+        return new JsonResponse($res);
     }
 
     private function getImageURL($image = false)

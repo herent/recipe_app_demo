@@ -6,6 +6,7 @@ use Controller;
 use Core;
 use Express;
 use Concrete\Core\Express\EntryList;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Recipe extends Controller
 {
@@ -47,8 +48,9 @@ class Recipe extends Controller
                 $res[]                    = $thisRecipe;
             }
         }
-        echo $jsonh->encode($res);
-        die();
+//        echo $jsonh->encode($res);
+//        die();
+        return new JsonResponse($res);
     }
 
     private function getImageURL($image = false)
