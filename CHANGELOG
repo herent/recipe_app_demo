@@ -1,3 +1,7 @@
 Version 0.9.1
 =============
 Basics of creating the Express objects is in place.
+
+Version 1.0.0
+=============
+Fully functional demo with routes and associations.

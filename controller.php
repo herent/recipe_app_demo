@@ -38,7 +38,7 @@ class Controller extends Package
         'RecipeAppDemo' => '\RecipeAppDemo'
     ];
     protected $pkgHandle                        = 'recipe_app_demo';
-    protected $pkgVersion                       = '0.9.1';
+    protected $pkgVersion                       = '1.0.0';
     protected $pkgName                          = 'Recipe App Demo';
     protected $pkgDescription                   = 'A sample package using concrete5 express objects and react.js to create a recipe application.';
 
