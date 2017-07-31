@@ -48,8 +48,6 @@ class Recipe extends Controller
                 $res[]                    = $thisRecipe;
             }
         }
-//        echo $jsonh->encode($res);
-//        die();
         return new JsonResponse($res);
     }
 

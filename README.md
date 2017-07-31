@@ -6,4 +6,4 @@ of the display will be handled with a separate application.
 What this package does:
 * Install Recipe and Recipe Category Express Objects
 * Create forms for both
-* Provides routes for the javascript application to consume.
+* Provides routes for the javascript application to consume
