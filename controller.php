@@ -10,8 +10,8 @@ use Illuminate\Filesystem\Filesystem;
 use Express;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList;
-//use Concrete\Core\Routing\Route;
-use Route;
+use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\Routing\RouterInterface;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -34,38 +34,24 @@ class Controller extends Package
     protected $pkgAllowsFullContentSwap         = false;
     protected $pkgContentProvidesFileThumbnails = false;
     protected $pkgAutoloaderMapCoreExtensions   = true;
-    protected $pkgAutoloaderRegistries = [
+    protected $pkgAutoloaderRegistries          = [
         'RecipeAppDemo' => '\RecipeAppDemo'
     ];
-    protected $pkgHandle = 'recipe_app_demo';
-    protected $pkgVersion = '0.9.1';
-    protected $pkgName = 'Recipe App Demo';
-    protected $pkgDescription = 'A sample package using concrete5 express objects and react.js to create a recipe application.';
+    protected $pkgHandle                        = 'recipe_app_demo';
+    protected $pkgVersion                       = '0.9.1';
+    protected $pkgName                          = 'Recipe App Demo';
+    protected $pkgDescription                   = 'A sample package using concrete5 express objects and react.js to create a recipe application.';
 
     public function on_start()
     {
-        //require $this->getPackagePath().'/vendor/autoload.php';
-        Route::register(
-            'ajax/recipes/categories', '\RecipeAppDemo\Category::listAll'
-        );
-        Route::register(
-            'ajax/recipes/categories/{categoryID}', '\RecipeAppDemo\Category::listAll'
-        );
-        Route::register(
-            'ajax/recipes/categories/{categoryID}/recipe-list', '\RecipeAppDemo\Category::getCategoryRecipes'
-        );
-        Route::register(
-            'ajax/recipes/featured', '\RecipeAppDemo\Category::getFeatured'
-        );
-        Route::register(
-            'ajax/recipes/featured/{categoryID}', '\RecipeAppDemo\Category::getFeatured'
-        );
-        Route::register(
-            'ajax/recipes/list', '\RecipeAppDemo\Recipe::listAll'
-        );
-        Route::register(
-            'ajax/recipes/detail/{recipeID}', '\RecipeAppDemo\Recipe::listAll'
-        );
+        $route = $this->app->make(RouterInterface::class);
+        $route->register('ajax/recipes/categories', '\RecipeAppDemo\Category::listAll');
+        $route->register('ajax/recipes/categories/{categoryID}', '\RecipeAppDemo\Category::listAll');
+        $route->register('ajax/recipes/categories/{categoryID}/recipe-list', '\RecipeAppDemo\Category::getCategoryRecipes');
+        $route->register('ajax/recipes/featured', '\RecipeAppDemo\Category::getFeatured');
+        $route->register('ajax/recipes/featured/{categoryID}', '\RecipeAppDemo\Category::getFeatured');
+        $route->register('ajax/recipes/list', '\RecipeAppDemo\Recipe::listAll');
+        $route->register('ajax/recipes/detail/{recipeID}', '\RecipeAppDemo\Recipe::listAll');
     }
 
     public function install()
@@ -100,10 +86,8 @@ class Controller extends Package
         $recipe = Express::buildObject('recipe', 'recipes', 'Recipe', $pkg);
         // name
         $recipe->addAttribute('text', 'Name', 'recipe_name');
-
         // prep time
         $recipe->addAttribute('text', 'Prep Time', 'recipe_prep_time');
-
         // difficulty
         $difficultySettings    = new \Concrete\Core\Entity\Attribute\Key\Settings\SelectSettings();
         $difficultyOptionsList = new SelectValueOptionList;
@@ -120,17 +104,14 @@ class Controller extends Package
         }
         $difficultySettings->setOptionList($difficultyOptionsList);
         $recipe->addAttribute('select', 'Difficulty', 'recipe_difficulty', $difficultySettings);
-
         // feeds
         $recipe->addAttribute('text', 'Feeds', 'recipe_feeds');
-
         // image
         $recipe->addAttribute('image_file', "Image", "recipe_image");
         // ingredients
         $ingredientSettings = new \Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings();
         $ingredientSettings->setMode((string) "rich_text");
         $recipe->addAttribute('textarea', 'Ingredients', 'recipe_ingredients', $ingredientSettings);
-
         // instructions
         $instructionsSettings = new \Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings();
         $instructionsSettings->setMode((string) "rich_text");
@@ -153,6 +134,7 @@ class Controller extends Package
         $catFieldset = $catForm->addFieldset("Basics");
         $catFieldset->addAttributeKeyControl("recipe_category_name");
         $catFieldset->addAttributeKeyControl("recipe_category_image");
+        // note, this is only in the v8 on github currently
         $catFieldset->addAssociationControl("featured_recipe");
         $catForm     = $catForm->save();
         $recipeCategory->getEntity()->setDefaultViewForm($catForm);
@@ -171,6 +153,7 @@ class Controller extends Package
         $recipeFieldset->addAttributeKeyControl("recipe_image");
         $recipeFieldset->addAttributeKeyControl("recipe_ingredients");
         $recipeFieldset->addAttributeKeyControl("recipe_instructions");
+        // note, this is only in the v8 on github currently
         $recipeFieldset->addAssociationControl("recipe_categories");
         $recipeForm     = $recipeForm->save();
         $recipe->getEntity()->setDefaultViewForm($recipeForm);
