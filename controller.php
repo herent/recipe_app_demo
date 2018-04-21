@@ -45,7 +45,7 @@ class Controller extends Package
         $route = $this->app->make(RouterInterface::class);
         $route->register('ajax/recipes/categories', '\RecipeAppDemo\Category::listAll');
         $route->register('ajax/recipes/categories/{categoryID}', '\RecipeAppDemo\Category::listAll');
-        $route->register('ajax/recipes/categories/{categoryID}/recipe-list', '\RecipeAppDemo\Category::getCategoryRecipes');
+        $route->register('ajax/recipes/categories/{categoryID}/list', '\RecipeAppDemo\Category::getCategoryRecipes');
         $route->register('ajax/recipes/featured', '\RecipeAppDemo\Category::getFeatured');
         $route->register('ajax/recipes/featured/{categoryID}', '\RecipeAppDemo\Category::getFeatured');
         $route->register('ajax/recipes/list', '\RecipeAppDemo\Recipe::listAll');

@@ -40,7 +40,8 @@ class Category extends Controller
                 $res[]                       = $thisCategory;
             }
         }
-        return new JsonResponse($res);
+        $categories = array("categories" => $res);
+        return new JsonResponse($categories);
     }
 
     public function getCategoryRecipes($categoryID = false)
@@ -62,7 +63,8 @@ class Category extends Controller
                 }
             }
         }
-        return new JsonResponse($res);
+        $recipes = array("recipes" => $res);
+        return new JsonResponse($recipes);
     }
 
     public function getFeatured($categoryID = false)
@@ -104,7 +106,8 @@ class Category extends Controller
                 }
             }
         }
-        return new JsonResponse($res);
+        $featured = array("featured" => $res);
+        return new JsonResponse($featured);
     }
 
     private function getImageURL($image = false)
