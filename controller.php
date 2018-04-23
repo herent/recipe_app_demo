@@ -12,6 +12,7 @@ use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Routing\RouterInterface;
+use Concrete\Core\Page\Theme\Theme;
 
 /**
  * Package Controller Class.
@@ -33,7 +34,7 @@ class Controller extends Package
     protected $pkgContentProvidesFileThumbnails = false;
     protected $pkgAutoloaderMapCoreExtensions   = true;
     protected $pkgAutoloaderRegistries          = [
-        'RecipeAppDemo' => '\RecipeAppDemo'
+        'src/RecipeAppDemo' => '\RecipeAppDemo'
     ];
     protected $pkgHandle                        = 'recipe_app_demo';
     protected $pkgVersion                       = '1.0.0';
@@ -55,8 +56,13 @@ class Controller extends Package
     public function install()
     {
         $pkg = parent::install();
+        $this->installTheme($pkg);
         $this->installExpressObjects($pkg);
         return $pkg;
+    }
+
+    private function installTheme($pkg){
+        Theme::add("recipes", $pkg);
     }
 
     private function installExpressObjects($pkg)

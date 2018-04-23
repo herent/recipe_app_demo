@@ -23,7 +23,7 @@ class Category extends Controller
                 $thisCategory["id"]          = $category->getID();
                 $thisCategory["name"]        = $category->getRecipeCategoryName();
                 $thisCategory["headerImage"] = $this->getImageURL($category->getRecipeCategoryImage());
-                $thisCategory["recipeCount"] = count($category->getRecipeCategories());
+                $thisCategory["recipeCount"] = count($category->getCategoryRecipes());
                 $res[]                       = $thisCategory;
             }
         } else {
@@ -36,12 +36,15 @@ class Category extends Controller
                 $thisCategory["id"]          = $category->getID();
                 $thisCategory["name"]        = $category->getRecipeCategoryName();
                 $thisCategory["headerImage"] = $this->getImageURL($category->getRecipeCategoryImage());
-                $thisCategory["recipeCount"] = count($category->getRecipeCategories());
+                $thisCategory["recipeCount"] = count($category->getCategoryRecipes());
                 $res[]                       = $thisCategory;
             }
         }
         $categories = array("categories" => $res);
-        return new JsonResponse($categories);
+        $response = new JsonResponse();
+        $response->setContent(json_encode($categories));
+        $response->headers->set("Access-Control-Allow-Origin", "*");
+        return $response;
     }
 
     public function getCategoryRecipes($categoryID = false)
@@ -64,7 +67,10 @@ class Category extends Controller
             }
         }
         $recipes = array("recipes" => $res);
-        return new JsonResponse($recipes);
+        $response = new JsonResponse();
+        $response->setContent(json_encode($recipes));
+        $response->headers->set("Access-Control-Allow-Origin", "*");
+        return $response;
     }
 
     public function getFeatured($categoryID = false)
@@ -107,7 +113,10 @@ class Category extends Controller
             }
         }
         $featured = array("featured" => $res);
-        return new JsonResponse($featured);
+        $response = new JsonResponse();
+        $response->setContent(json_encode($featured));
+        $response->headers->set("Access-Control-Allow-Origin", "*");
+        return $response;
     }
 
     private function getImageURL($image = false)

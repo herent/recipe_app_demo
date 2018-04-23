@@ -1,0 +1,9 @@
+.category {
+  max-width: 960px;
+  width: 80%;
+  margin: 0 auto;
+  padding: 10px;
+}
+.category img {
+  max-width: 100%;
+}

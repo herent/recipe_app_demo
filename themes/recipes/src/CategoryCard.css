@@ -1,0 +1,9 @@
+.category-card {
+  outline: 1px solid green;
+  max-width: 300px;
+  display: inline-block;
+  margin: 0 10px;
+}
+.category-card img {
+  max-width: 100%;
+}

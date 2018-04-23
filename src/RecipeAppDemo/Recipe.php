@@ -48,7 +48,10 @@ class Recipe extends Controller
                 $res[]                    = $thisRecipe;
             }
         }
-        return new JsonResponse($res);
+        $response = new JsonResponse();
+        $response->setContent(json_encode($res));
+        $response->headers->set("Access-Control-Allow-Origin", "*");
+        return $response;
     }
 
     private function getImageURL($image = false)

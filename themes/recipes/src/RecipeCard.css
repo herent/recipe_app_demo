@@ -1,0 +1,9 @@
+.recipe-card {
+  outline: 1px solid green;
+  max-width: 300px;
+  display: inline-block;
+  margin: 0 10px;
+}
+.recipe-card img {
+  max-width: 100%;
+}
