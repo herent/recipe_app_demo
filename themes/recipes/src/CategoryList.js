@@ -12,7 +12,7 @@ class CategoryList extends Component {
     };
   }
   componentDidMount() {
-    axios.get('http://recipes.werstnet.local/ajax/recipes/categories').then(res => {
+    axios.get('//recipes.werstnet.local/ajax/recipes/categories').then(res => {
       const categories = res.data.categories;
       this.setState({
         isLoaded: true,

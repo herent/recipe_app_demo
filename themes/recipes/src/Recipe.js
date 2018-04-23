@@ -12,7 +12,7 @@ class Recipe extends Component {
   }
   componentDidMount() {
     const { match: { params } } = this.props;
-    var urlRecipeDetails = 'http://recipes.werstnet.local/ajax/recipes/detail/' + params.id;
+    var urlRecipeDetails = '//recipes.werstnet.local/ajax/recipes/detail/' + params.id;
     axios.get(urlRecipeDetails).then(res => {
       const recipe = res.data[0];
       console.log(recipe);

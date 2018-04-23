@@ -15,8 +15,8 @@ class Category extends Component {
   }
   componentDidMount() {
     const { match: { params } } = this.props;
-    var urlCategoryDetails = 'http://recipes.werstnet.local/ajax/recipes/categories/' + params.id;
-    var urlCategoryRecipes = 'http://recipes.werstnet.local/ajax/recipes/categories/' + params.id + '/list';
+    var urlCategoryDetails = '//recipes.werstnet.local/ajax/recipes/categories/' + params.id;
+    var urlCategoryRecipes = '//recipes.werstnet.local/ajax/recipes/categories/' + params.id + '/list';
     axios.get(urlCategoryDetails).then(res => {
       const category = res.data.categories[0];
       this.setState({
